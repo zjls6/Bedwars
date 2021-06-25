@@ -16,6 +16,11 @@ public class LobbyWorld extends GameWorld{
     }
 
     @Override
+    public String getConfigName() {
+        return null;
+    }
+
+    @Override
     public World getWorld() {
         return null;
     }
