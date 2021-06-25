@@ -4,7 +4,7 @@ import me.zjls.bedwars.teams.TeamColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 
-public class LobbyWorld extends GameWorld{
+public class LobbyWorld extends GameWorld {
     @Override
     public boolean generateWorld(Runnable runnable) {
         return false;
