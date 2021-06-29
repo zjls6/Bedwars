@@ -88,7 +88,9 @@ public class ConfigManager {
                 section = colorSection.createSection(entry.getKey());
             }
 
-            writeLocation(entry.getValue(), section);
+            if (entry.getValue() != null) {
+                writeLocation(entry.getValue(), section);
+            }
         }
 
         colorSection.set("generators", null);

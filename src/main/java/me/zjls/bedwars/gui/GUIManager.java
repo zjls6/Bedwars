@@ -14,10 +14,18 @@ public class GUIManager {
     }
 
     public void setGUI(Player p, GUI gui) {
+        if (gui == null) {
+            p.closeInventory();
+            return;
+        }
+
         playerGUIMap.put(p, gui);
         p.closeInventory();
         p.openInventory(gui.getInventory());
+    }
 
+    public void clear(Player p) {
+        playerGUIMap.put(p, null);
     }
 
 }

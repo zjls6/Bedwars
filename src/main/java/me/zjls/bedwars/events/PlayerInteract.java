@@ -58,17 +58,14 @@ public class PlayerInteract implements Listener {
                 p.sendMessage("设置绿宝石生成点成功！" + emeraldGenerator.getLocation());
                 break;
             case "更改队伍":
-
                 SetupIslandGUI gui = new SetupIslandGUI(gameManager);
                 gameManager.getGuiManager().setGUI(p, gui);
-
                 break;
             case "定点棒1":
                 if (clickedLocation != null) {
                     island.setProtectCorner1(clickedLocation);
                     p.sendMessage("左下位置" + clickedLocation);
                 }
-
                 break;
             case "定点棒2":
                 if (clickedLocation != null) {
@@ -108,6 +105,9 @@ public class PlayerInteract implements Listener {
                 island.setSpawnLocation(currentLocation);
                 p.sendMessage("设置队伍出生点成功！" + currentLocation);
                 break;
+            case "保存":
+                gameManager.getConfigManager().saveIsland(island);
+                gameManager.getSetupManager().worldSetup(p, island.getGameWorld());
             default:
                 return;
         }

@@ -26,7 +26,7 @@ public class SetupIslandGUI implements GUI {
             );
         }
 
-        inventory.setItem(26,new ItemBuilder(Material.BARRIER,1).setName("&c关闭").toItemStack());
+        inventory.setItem(26, new ItemBuilder(Material.BARRIER, 1).setName("&c关闭").toItemStack());
 
     }
 
@@ -47,20 +47,25 @@ public class SetupIslandGUI implements GUI {
         }
 
         TeamColor clickColor = null;
+
         String itemName = ChatColor.stripColor(item.getItemMeta().getDisplayName());
 
         for (TeamColor color : TeamColor.values()) {
             if (itemName.equals(ChatColor.stripColor(color.getName()))) {
                 clickColor = color;
+                p.sendMessage(color.getName());
                 break;
             }
         }
 
         if (clickColor != null) {
             gameManager.getSetupManager().teamSetup(p, clickColor);
+            p.sendMessage("teamsetup");
         } else {
             gameManager.getSetupManager().worldSetup(p, gameManager.getSetupManager().getWorld(p));
+            p.sendMessage("worldsetup");
         }
+
         return null;
     }
 

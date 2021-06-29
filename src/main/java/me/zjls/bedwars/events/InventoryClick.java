@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 
 public class InventoryClick implements Listener {
 
@@ -25,13 +26,20 @@ public class InventoryClick implements Listener {
         GUI gui = gameManager.getGuiManager().getOpenGUI(p);
         if (gui == null) return;
 
+        e.setCancelled(true);
+
         GUI newGUI = gui.handleClick(p, e.getCurrentItem(), e.getView());
 
         e.getView().close();
 
-        if (newGUI != null) {
-            gameManager.getGuiManager().setGUI(p, newGUI);
-        }
+        gameManager.getGuiManager().setGUI(p, newGUI);
 
+    }
+
+    @EventHandler
+    public void onClose(InventoryCloseEvent e) {
+        Player p = (Player) e.getPlayer();
+
+        gameManager.getGuiManager().clear(p);
     }
 }

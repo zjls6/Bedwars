@@ -30,7 +30,7 @@ public class SetupManager {
     public void activateSetup(Player p, GameWorld world) {
         p.getInventory().clear();
         p.setGameMode(GameMode.CREATIVE);
-        p.teleport(new Location(world.getWorld(), 0, 64, 0));
+        p.teleport(new Location(world.getWorld(), 0, 67, 0));
 
         worldSetup(p, world);
     }
@@ -57,7 +57,8 @@ public class SetupManager {
                 new ItemBuilder(Material.IRON_INGOT, 1).setName("设置资源生成点").toItemStack(),
                 new ItemBuilder(Material.RED_BED, 1).setName("设置床").toItemStack(),
                 new ItemBuilder(Material.BOWL, 1).setName("设置队伍出生点").toItemStack(),
-                new ItemBuilder(color.getTeamWool(), 1).setName("更改队伍").toItemStack()
+                new ItemBuilder(color.getTeamWool(), 1).setName("&r更改队伍").toItemStack(),
+                new ItemBuilder(Material.GREEN_STAINED_GLASS_PANE,1).setName("&a&l保存").toItemStack()
         );
 
         Island island = new Island(getWorld(p), color);
