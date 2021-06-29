@@ -1,5 +1,6 @@
 package me.zjls.bedwars.teams;
 
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
 
 public enum TeamColor {
@@ -16,21 +17,21 @@ public enum TeamColor {
     public String getName() {
         switch (this) {
             case RED:
-                return "红";
+                return "§c红";
             case BLUE:
-                return "蓝";
+                return "§1蓝";
             case GREEN:
-                return "绿";
+                return "§a绿";
             case YELLOW:
-                return "黄";
+                return "§e黄";
             case AQUA:
-                return "青";
+                return "§b青";
             case WHITE:
-                return "白";
+                return "§f白";
             case PINK:
-                return "粉";
+                return "§d粉";
             case GRAY:
-                return "灰";
+                return "§8灰";
         }
         return "";
     }
@@ -66,6 +67,5 @@ public enum TeamColor {
 
         return teamWool;
     }
-
 
 }

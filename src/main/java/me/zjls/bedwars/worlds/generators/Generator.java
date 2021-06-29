@@ -13,6 +13,11 @@ public class Generator {
 
     private boolean activate = false; //资源是否开始生成
 
+    public Generator(Location location, GeneratorType type) {
+        this.location = location;
+        this.type = type;
+    }
+
     public Location getLocation() {
         return location;
     }

@@ -1,21 +1,43 @@
 package me.zjls.bedwars.worlds;
 
 import me.zjls.bedwars.teams.TeamColor;
+import me.zjls.bedwars.worlds.generators.Generator;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.WorldCreator;
 
-public abstract class GameWorld {
+import java.util.List;
 
-    public abstract boolean generateWorld(Runnable runnable);
+public class GameWorld {
 
-    public abstract String getName();
+    private String name;
+    private World world;
 
-    public abstract String getConfigName();
+    public GameWorld(String name) {
+        this.name = name;
+    }
 
-    public abstract World getWorld();
+    public void loadWorld(Runnable runnable) {
+        WorldCreator creator = new WorldCreator(name);
+        world = creator.createWorld();
+        runnable.run();
+    }
 
-    public abstract Location getLobbyLocation();
+    public String getName() {
+        return name;
+    }
 
-    public abstract Location getTeamSpawn(TeamColor color);
+
+    public World getWorld() {
+        return world;
+    }
+
+    public Location getLobbyLocation() {
+        return null;
+    }
+
+    public List<Generator> getGenerators() {
+        return null;
+    }
 
 }

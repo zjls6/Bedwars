@@ -1,6 +1,8 @@
 package me.zjls.bedwars;
 
 import me.zjls.bedwars.commands.SetupCommand;
+import me.zjls.bedwars.events.InventoryClick;
+import me.zjls.bedwars.events.PlayerInteract;
 import me.zjls.bedwars.events.PlayerJoinOrQuit;
 import me.zjls.bedwars.games.GameManager;
 import org.bukkit.Bukkit;
@@ -15,10 +17,15 @@ public final class Main extends JavaPlugin {
     public void onEnable() {
         // Plugin startup logic
         this.gameManager = new GameManager(this);
+
         for (Player player : Bukkit.getOnlinePlayers()) {
             gameManager.getScoreboard().addPlayer(player);
         }
+
         getServer().getPluginManager().registerEvents(new PlayerJoinOrQuit(gameManager), this);
+        getServer().getPluginManager().registerEvents(new PlayerInteract(gameManager), this);
+        getServer().getPluginManager().registerEvents(new InventoryClick(gameManager), this);
+
         getCommand("setup").setExecutor(new SetupCommand(gameManager));
     }
 

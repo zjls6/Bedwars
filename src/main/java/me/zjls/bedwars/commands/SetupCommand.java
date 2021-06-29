@@ -1,8 +1,7 @@
 package me.zjls.bedwars.commands;
 
 import me.zjls.bedwars.games.GameManager;
-import org.bukkit.World;
-import org.bukkit.WorldCreator;
+import me.zjls.bedwars.worlds.GameWorld;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -20,7 +19,7 @@ public class SetupCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage("§2该命令不能在控制台执行！");
+            sender.sendMessage("§4该命令不能在控制台执行！");
             return true;
         }
         Player p = (Player) sender;
@@ -30,13 +29,15 @@ public class SetupCommand implements CommandExecutor {
         }
         if (args.length == 0) {
             p.sendMessage("/setup <地图名>");
+            return true;
         }
-        String mapName=args[0];
-        p.sendMessage("加载世界中......");
-        WorldCreator creator=new WorldCreator(mapName);
-        World world = creator.createWorld();
 
-        gameManager.getSetupManager().activateSetup(p,world);
+        String mapName = args[0];
+        GameWorld world = new GameWorld(mapName);
+
+        p.sendMessage("加载世界中......");
+
+        world.loadWorld(() -> gameManager.getSetupManager().activateSetup(p, world));
 
         return true;
     }
