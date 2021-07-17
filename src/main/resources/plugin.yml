@@ -4,6 +4,10 @@ main: me.zjls.bedwars.Main
 api-version: 1.16
 authors: [zjls]
 description: 起床战争
+softdepend: [HolographicDisplays]
+depend: [Citizens]
 commands:
   setup:
     description: 设置一个地图
+  start:
+    description: 开始游戏

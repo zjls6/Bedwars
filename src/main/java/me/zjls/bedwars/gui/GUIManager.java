@@ -25,6 +25,7 @@ public class GUIManager {
     }
 
     public void clear(Player p) {
+
         playerGUIMap.put(p, null);
     }
 

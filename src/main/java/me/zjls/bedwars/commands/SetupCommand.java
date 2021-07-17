@@ -6,7 +6,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 public class SetupCommand implements CommandExecutor {
 
@@ -17,12 +16,13 @@ public class SetupCommand implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
             sender.sendMessage("§4该命令不能在控制台执行！");
             return true;
         }
         Player p = (Player) sender;
+
         if (!p.hasPermission("bedwars.admin")) {
             p.sendMessage("§c您没有使用该命令的权限");
             return true;
@@ -32,12 +32,18 @@ public class SetupCommand implements CommandExecutor {
             return true;
         }
 
+        if (args[0].equalsIgnoreCase("exit")) {
+            gameManager.getSetupManager().exitSetup(p);
+            return true;
+        }
+
         String mapName = args[0];
+
         GameWorld world = new GameWorld(mapName);
 
         p.sendMessage("加载世界中......");
 
-        world.loadWorld(() -> gameManager.getSetupManager().activateSetup(p, world));
+        world.loadWorld(gameManager, true, () -> gameManager.getSetupManager().activateSetup(p, world));
 
         return true;
     }

@@ -1,9 +1,10 @@
 package me.zjls.bedwars.utils;
 
 import me.zjls.bedwars.games.GameManager;
-import me.zjls.bedwars.teams.TeamColor;
+import me.zjls.bedwars.worlds.IslandColor;
 import me.zjls.bedwars.worlds.GameWorld;
 import me.zjls.bedwars.worlds.Island;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -24,13 +25,13 @@ public class SetupManager {
     }
 
     public boolean isSetuping(Player p) {
-        return playerGameWorldMap.containsKey(p);
+        return playerGameWorldMap.containsKey(p) || playerIslandMap.containsKey(p);
     }
 
     public void activateSetup(Player p, GameWorld world) {
         p.getInventory().clear();
         p.setGameMode(GameMode.CREATIVE);
-        p.teleport(new Location(world.getWorld(), 0, 67, 0));
+        p.teleport(new Location(world.getWorld(), 0, 68, 0));
 
         worldSetup(p, world);
     }
@@ -40,13 +41,14 @@ public class SetupManager {
         p.getInventory().addItem(
                 new ItemBuilder(Material.DIAMOND, 1).setName("&b设置钻石生成点").toItemStack(),
                 new ItemBuilder(Material.EMERALD, 1).setName("&a设置绿宝石生成点").toItemStack(),
+                new ItemBuilder(Material.BLAZE_POWDER,1).setName("&r设置等待大厅出生点").toItemStack(),
                 new ItemBuilder(Material.STICK, 1).setName("&r更改队伍").toItemStack()
         );
 
         playerGameWorldMap.put(p, world);
     }
 
-    public void teamSetup(Player p, TeamColor color) {
+    public void teamSetup(Player p, IslandColor color) {
         p.getInventory().clear();
 
         p.getInventory().addItem(
@@ -58,11 +60,11 @@ public class SetupManager {
                 new ItemBuilder(Material.RED_BED, 1).setName("设置床").toItemStack(),
                 new ItemBuilder(Material.BOWL, 1).setName("设置队伍出生点").toItemStack(),
                 new ItemBuilder(color.getTeamWool(), 1).setName("&r更改队伍").toItemStack(),
-                new ItemBuilder(Material.GREEN_STAINED_GLASS_PANE,1).setName("&a&l保存").toItemStack()
+                new ItemBuilder(Material.GREEN_STAINED_GLASS_PANE, 1).setName("&a&l保存").toItemStack()
         );
 
         Island island = new Island(getWorld(p), color);
-        playerIslandMap.put(p,island);
+        playerIslandMap.put(p, island);
 
     }
 
@@ -72,5 +74,17 @@ public class SetupManager {
 
     public GameWorld getWorld(Player p) {
         return playerGameWorldMap.get(p);
+    }
+
+    public void exitSetup(Player p){
+        if (isSetuping(p)) {
+            playerIslandMap.remove(p);
+            playerGameWorldMap.remove(p);
+            p.teleport(Bukkit.getWorld("world").getSpawnLocation());
+            p.getInventory().clear();
+            p.sendMessage("§6您已退出配置状态");
+        }else {
+            p.sendMessage("§c您不在配置状态中");
+        }
     }
 }

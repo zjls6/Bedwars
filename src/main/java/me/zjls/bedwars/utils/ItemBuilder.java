@@ -3,7 +3,9 @@ package me.zjls.bedwars.utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
@@ -120,12 +122,12 @@ public class ItemBuilder {
      *
      * @param owner The name of the skull's owner.
      */
-    public ItemBuilder setSkullOwner(String owner) {
+    public ItemBuilder setSkullOwner(OfflinePlayer owner) {
         try {
             SkullMeta im = (SkullMeta) is.getItemMeta();
-            im.setOwner(owner);
+            im.setOwningPlayer(owner);
             is.setItemMeta(im);
-        } catch (ClassCastException expected) {
+        } catch (ClassCastException ignored) {
         }
         return this;
     }
@@ -154,10 +156,12 @@ public class ItemBuilder {
     }
 
     /**
-     * Sets infinity durability on the item by setting the durability to Short.MAX_VALUE.
+     * Sets setUnbreakable on the item by setting the durability to Short.MAX_VALUE.
      */
-    public ItemBuilder setInfinityDurability() {
-        is.setDurability(Short.MAX_VALUE);
+    public ItemBuilder setUnbreakable() {
+        ItemMeta im = is.getItemMeta();
+        im.setUnbreakable(true);
+        is.setItemMeta(im);
         return this;
     }
 
@@ -258,6 +262,13 @@ public class ItemBuilder {
             is.setItemMeta(im);
         } catch (ClassCastException ignored) {
         }
+        return this;
+    }
+
+    public ItemBuilder hideUnbreakable(){
+        ItemMeta im = is.getItemMeta();
+        im.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+        is.setItemMeta(im);
         return this;
     }
 

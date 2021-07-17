@@ -6,7 +6,7 @@
 
     <groupId>me.zjls</groupId>
     <artifactId>Bedwars</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.2-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>Bedwars</name>
@@ -55,8 +55,8 @@
 
     <repositories>
         <repository>
-            <id>papermc-repo</id>
-            <url>https://papermc.io/repo/repository/maven-public/</url>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
         <repository>
             <id>sonatype</id>
@@ -67,26 +67,39 @@
             <url>https://jitpack.io</url>
         </repository>
         <repository>
+            <id>jordanosterberg-repo</id>
+            <url>https://nexus-repo.jordanosterberg.com/repository/maven-releases/</url>
+        </repository>
+        <repository>
             <id>enginehub-maven</id>
             <url>https://maven.enginehub.org/repo/</url>
         </repository>
         <repository>
-            <id>bungeecord-repo</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <id>codemc-repo</id>
+            <url>https://repo.codemc.io/repository/maven-public/</url>
         </repository>
+        <repository>
+            <id>everything</id>
+            <url>http://repo.citizensnpcs.co/</url>
+        </repository>
+
+        <!--        <repository>-->
+        <!--            <id>bungeecord-repo</id>-->
+        <!--            <url>https://oss.sonatype.org/content/repositories/snapshots</url>-->
+        <!--        </repository>-->
     </repositories>
 
     <dependencies>
         <dependency>
-            <groupId>com.destroystokyo.paper</groupId>
-            <artifactId>paper-api</artifactId>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
             <version>1.16.5-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.JordanOsterberg</groupId>
+            <groupId>dev.jcsoftware</groupId>
             <artifactId>JScoreboards</artifactId>
-            <version>1.0.1-RELEASE</version>
+            <version>2.0.3-RELEASE</version>
         </dependency>
         <dependency>
             <groupId>com.sk89q.worldedit</groupId>
@@ -95,18 +108,32 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>net.md-5</groupId>
-            <artifactId>bungeecord-api</artifactId>
-            <version>1.17-R0.1-SNAPSHOT</version>
-            <type>jar</type>
+            <groupId>com.gmail.filoghost.holographicdisplays</groupId>
+            <artifactId>holographicdisplays-api</artifactId>
+            <version>2.4.8</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>net.md-5</groupId>
-            <artifactId>bungeecord-api</artifactId>
-            <version>1.17-R0.1-SNAPSHOT</version>
-            <type>javadoc</type>
+            <groupId>net.citizensnpcs</groupId>
+            <artifactId>citizens-main</artifactId>
+            <version>2.0.28-SNAPSHOT</version>
+            <type>jar</type>
             <scope>provided</scope>
-        </dependency>
+        </dependency >
+
+        <!--        <dependency>-->
+        <!--            <groupId>net.md-5</groupId>-->
+        <!--            <artifactId>bungeecord-api</artifactId>-->
+        <!--            <version>1.17-R0.1-SNAPSHOT</version>-->
+        <!--            <type>jar</type>-->
+        <!--            <scope>provided</scope>-->
+        <!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>net.md-5</groupId>-->
+        <!--            <artifactId>bungeecord-api</artifactId>-->
+        <!--            <version>1.17-R0.1-SNAPSHOT</version>-->
+        <!--            <type>javadoc</type>-->
+        <!--            <scope>provided</scope>-->
+        <!--        </dependency>-->
     </dependencies>
 </project>
