@@ -49,7 +49,11 @@ public class TeamPickerGUI implements GUI {
                 lore.add("§r队伍玩家列表： (" + players.size() + "/" + gameManager.getGameWorld().getMaxTeamSize() + ")");
                 for (UUID uuid : players) {
                     Player player = Bukkit.getPlayer(uuid);
-                    lore.add(Color.of(island.getColor().getColor()) + player.getDisplayName());
+                    if (player != null) {
+                        lore.add(Color.of(island.getColor().getColor()) + player.getDisplayName());
+                    } else {
+                        lore.add(Color.of(island.getColor().getColor()) + "unknown");
+                    }
                 }
                 teamWoolMeta.setLore(lore);
             }
@@ -57,23 +61,6 @@ public class TeamPickerGUI implements GUI {
             teamWool.setItemMeta(teamWoolMeta);
 
             inventory.addItem(teamWool);
-
-//            if (island.isMember(p)) {
-//
-//                if (!players.isEmpty()) {
-//                    inventory.addItem(
-//                            new ItemBuilder(island.getColor().getTeamWool()).setName(island.getColor().getName())
-//                                    .addLoreLine("§a已选择").addLoreLine()
-//                                    .addEnchant(Enchantment.THORNS, 1).toItemStack()
-//                    );
-//                }
-//
-//
-//            } else {
-//                inventory.addItem(
-//                        new ItemBuilder(island.getColor().getTeamWool()).setName(island.getColor().getName()).toItemStack()
-//                );
-//            }
         }
 
 

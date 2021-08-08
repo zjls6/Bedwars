@@ -1,6 +1,5 @@
 package me.zjls.bedwars.utils;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -9,12 +8,16 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Easily create itemstacks, without messing your hands.
@@ -24,6 +27,7 @@ import java.util.Map;
  * @author NonameSL
  */
 public class ItemBuilder {
+    public static final char ALT_COLOR_CHAR = '&';
     private ItemStack is;
 
     /**
@@ -91,7 +95,14 @@ public class ItemBuilder {
      */
     public ItemBuilder setName(String name) {
         ItemMeta im = is.getItemMeta();
-        im.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
+        im.setDisplayName(me.zjls.bedwars.utils.Color.str(name));
+        is.setItemMeta(im);
+        return this;
+    }
+
+    public ItemBuilder clearName() {
+        ItemMeta im = is.getItemMeta();
+        im.setDisplayName(null);
         is.setItemMeta(im);
         return this;
     }
@@ -172,7 +183,7 @@ public class ItemBuilder {
      */
     public ItemBuilder setLore(String... lore) {
         ItemMeta im = is.getItemMeta();
-        im.setLore(Arrays.asList(lore));
+        im.setLore(Arrays.stream(lore).map(me.zjls.bedwars.utils.Color::str).collect(Collectors.toList()));
         is.setItemMeta(im);
         return this;
     }
@@ -184,7 +195,14 @@ public class ItemBuilder {
      */
     public ItemBuilder setLore(List<String> lore) {
         ItemMeta im = is.getItemMeta();
-        im.setLore(lore);
+        im.setLore(lore.stream().map(me.zjls.bedwars.utils.Color::str).collect(Collectors.toList()));
+        is.setItemMeta(im);
+        return this;
+    }
+
+    public ItemBuilder clearLore() {
+        ItemMeta im = is.getItemMeta();
+        im.setLore(new ArrayList<>());
         is.setItemMeta(im);
         return this;
     }
@@ -265,12 +283,42 @@ public class ItemBuilder {
         return this;
     }
 
-    public ItemBuilder hideUnbreakable(){
+    public ItemBuilder setPotionEffect(PotionEffectType type, int duration, int amplifier, boolean ambient, boolean particles, boolean icon) {
+        ItemMeta im = is.getItemMeta();
+        PotionMeta potionMeta = (PotionMeta) im;
+        potionMeta.addCustomEffect(new PotionEffect(type, duration, amplifier, ambient, particles, icon), true);
+        is.setItemMeta(potionMeta);
+        return this;
+    }
+
+    public ItemBuilder hideUnbreakable() {
         ItemMeta im = is.getItemMeta();
         im.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         is.setItemMeta(im);
         return this;
     }
+
+    public ItemBuilder hideAttributes() {
+        ItemMeta im = is.getItemMeta();
+        im.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        is.setItemMeta(im);
+        return this;
+    }
+
+    public ItemBuilder hidePotionEffects() {
+        ItemMeta im = is.getItemMeta();
+        im.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+        is.setItemMeta(im);
+        return this;
+    }
+
+    public ItemBuilder hideEnchants() {
+        ItemMeta im = is.getItemMeta();
+        im.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        is.setItemMeta(im);
+        return this;
+    }
+
 
     /**
      * Retrieves the itemstack from the ItemBuilder.

@@ -5,6 +5,7 @@ api-version: 1.16
 authors: [zjls]
 description: 起床战争
 softdepend: [HolographicDisplays]
+loadbefore: [ Multiverse-Core ]
 depend: [Citizens]
 commands:
   setup:

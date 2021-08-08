@@ -2,6 +2,7 @@ package me.zjls.bedwars.worlds.generators;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
+import lombok.Getter;
 import me.zjls.bedwars.games.GameManager;
 import me.zjls.bedwars.utils.Color;
 import org.bukkit.Location;
@@ -10,6 +11,7 @@ import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
+@Getter
 public class Generator {
 
     public GeneratorTier currentTier = GeneratorTier.ONE;
@@ -28,6 +30,49 @@ public class Generator {
         this.location = location;
         this.type = type;
         this.isInIsland = isInIsland;
+        if (!isInIsland) {
+            gameManager.getProtectedBlock().add(location.getBlock());
+            gameManager.getProtectedBlock().add(location.clone().add(-1, 0, -1).getBlock());
+            gameManager.getProtectedBlock().add(location.clone().add(-1, 0, 0).getBlock());
+            gameManager.getProtectedBlock().add(location.clone().add(-1, 0, 1).getBlock());
+            gameManager.getProtectedBlock().add(location.clone().add(0, 0, -1).getBlock());
+            gameManager.getProtectedBlock().add(location.clone().add(0, 0, 0).getBlock());
+            gameManager.getProtectedBlock().add(location.clone().add(0, 0, 1).getBlock());
+            gameManager.getProtectedBlock().add(location.clone().add(1, 0, -1).getBlock());
+            gameManager.getProtectedBlock().add(location.clone().add(1, 0, 0).getBlock());
+            gameManager.getProtectedBlock().add(location.clone().add(1, 0, 1).getBlock());
+
+            gameManager.getProtectedBlock().add(location.clone().add(-1, 1, -1).getBlock());
+            gameManager.getProtectedBlock().add(location.clone().add(-1, 1, 0).getBlock());
+            gameManager.getProtectedBlock().add(location.clone().add(-1, 1, 1).getBlock());
+            gameManager.getProtectedBlock().add(location.clone().add(0, 1, -1).getBlock());
+            gameManager.getProtectedBlock().add(location.clone().add(0, 1, 0).getBlock());
+            gameManager.getProtectedBlock().add(location.clone().add(0, 1, 1).getBlock());
+            gameManager.getProtectedBlock().add(location.clone().add(1, 1, -1).getBlock());
+            gameManager.getProtectedBlock().add(location.clone().add(1, 1, 0).getBlock());
+            gameManager.getProtectedBlock().add(location.clone().add(1, 1, 1).getBlock());
+
+            gameManager.getProtectedBlock().add(location.clone().add(-1, 2, -1).getBlock());
+            gameManager.getProtectedBlock().add(location.clone().add(-1, 2, 0).getBlock());
+            gameManager.getProtectedBlock().add(location.clone().add(-1, 2, 1).getBlock());
+            gameManager.getProtectedBlock().add(location.clone().add(0, 2, -1).getBlock());
+            gameManager.getProtectedBlock().add(location.clone().add(0, 2, 0).getBlock());
+            gameManager.getProtectedBlock().add(location.clone().add(0, 2, 1).getBlock());
+            gameManager.getProtectedBlock().add(location.clone().add(1, 2, -1).getBlock());
+            gameManager.getProtectedBlock().add(location.clone().add(1, 2, 0).getBlock());
+            gameManager.getProtectedBlock().add(location.clone().add(1, 2, 1).getBlock());
+
+            gameManager.getProtectedBlock().add(location.clone().add(-1, 3, -1).getBlock());
+            gameManager.getProtectedBlock().add(location.clone().add(-1, 3, 0).getBlock());
+            gameManager.getProtectedBlock().add(location.clone().add(-1, 3, 1).getBlock());
+            gameManager.getProtectedBlock().add(location.clone().add(0, 3, -1).getBlock());
+            gameManager.getProtectedBlock().add(location.clone().add(0, 3, 0).getBlock());
+            gameManager.getProtectedBlock().add(location.clone().add(0, 3, 1).getBlock());
+            gameManager.getProtectedBlock().add(location.clone().add(1, 3, -1).getBlock());
+            gameManager.getProtectedBlock().add(location.clone().add(1, 3, 0).getBlock());
+            gameManager.getProtectedBlock().add(location.clone().add(1, 3, 1).getBlock());
+
+        }
     }
 
     public void spawn() {
@@ -55,19 +100,21 @@ public class Generator {
 
         switch (type) {
             case IRON:
-                Item iron = location.getWorld().dropItem(location.clone().add(0, 1, 0), new ItemStack(Material.IRON_INGOT));
+                Item iron = location.getWorld().dropItem(location.clone().add(0, 0.5, 0), new ItemStack(Material.IRON_INGOT));
+                Item iron2 = location.getWorld().dropItem(location.clone().add(0, 0.5, 0), new ItemStack(Material.IRON_INGOT));
                 iron.setVelocity(new Vector(0, 0, 0));
+                iron2.setVelocity(new Vector(0, 0, 0));
                 break;
             case GOLD:
-                Item gold = location.getWorld().dropItem(location.clone().add(0, 1, 0), new ItemStack(Material.GOLD_INGOT));
+                Item gold = location.getWorld().dropItem(location.clone().add(0, 0.5, 0), new ItemStack(Material.GOLD_INGOT));
                 gold.setVelocity(new Vector(0, 0, 0));
                 break;
             case DIAMOND:
-                Item diamond = location.getWorld().dropItem(location.clone().add(0, 1, 0), new ItemStack(Material.DIAMOND));
+                Item diamond = location.getWorld().dropItem(location.clone().add(0, 0.5, 0), new ItemStack(Material.DIAMOND));
                 diamond.setVelocity(new Vector(0, 0, 0));
                 break;
             case EMERALD:
-                Item emerald = location.getWorld().dropItem(location.clone().add(0, 1, 0), new ItemStack(Material.EMERALD));
+                Item emerald = location.getWorld().dropItem(location.clone().add(0, 0.5, 0), new ItemStack(Material.EMERALD));
                 emerald.setVelocity(new Vector(0, 0, 0));
                 break;
             default:
@@ -96,7 +143,7 @@ public class Generator {
         hologram.appendTextLine(Color.str(type.getChatColor() + "&l" + type.getName())); //1 不变
         int timeLeft = (getActiveTime() - secSinceActive);
         if (timeLeft == 0) {
-            timeLeft = 30;
+            timeLeft = getActiveTime();
         }
         hologram.appendTextLine(Color.str("&e将在 &c" + timeLeft + " &e秒后产出")); //2 可变
         hologram.appendItemLine(type.getItem()); //3 不变
@@ -127,11 +174,11 @@ public class Generator {
                 }
             case GOLD:
                 if (currentTier.equals(GeneratorTier.ONE)) {
-                    return 16;
-                } else if (currentTier.equals(GeneratorTier.TWO)) {
                     return 8;
-                } else {
+                } else if (currentTier.equals(GeneratorTier.TWO)) {
                     return 4;
+                } else {
+                    return 2;
                 }
             case DIAMOND:
                 if (currentTier.equals(GeneratorTier.ONE)) {

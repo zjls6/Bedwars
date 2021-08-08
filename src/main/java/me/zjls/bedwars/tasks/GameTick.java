@@ -1,11 +1,19 @@
 package me.zjls.bedwars.tasks;
 
+import lombok.Getter;
 import me.zjls.bedwars.games.GameManager;
+import me.zjls.bedwars.games.GameState;
+import me.zjls.bedwars.utils.Bedwars;
+import me.zjls.bedwars.utils.Color;
 import me.zjls.bedwars.worlds.Island;
+import net.md_5.bungee.api.ChatMessageType;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+@Getter
 public class GameTick extends BukkitRunnable {
 
     private GameManager gameManager;
@@ -22,6 +30,30 @@ public class GameTick extends BukkitRunnable {
         currentSecond += 1;
         gameManager.getGameWorld().tick(currentSecond);
 
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            p.spigot().sendMessage(ChatMessageType.ACTION_BAR
+                    , Color.translateColorCodesToTextComponent("&#DF7C52死亡数：&6"
+                            + gameManager.getPlayerManager().getPlayerDeathCount().getOrDefault(p.getUniqueId(), 0)));
+        }
+
+        if (currentSecond == 30 * 60) {
+            for (Island island : gameManager.getGameWorld().getIslands()) {
+                if (island.isBedPlaced()) {
+                    Block block = island.getBedLocation().getBlock();
+                    block.setType(Material.AIR);
+                    gameManager.getColorHologramMap().get(island.getColor()).delete();
+                }
+            }
+            Bedwars.bc("");
+            Bedwars.bc(Color.str("&c床自毁 &7> &f所有的床都被破坏了！"));
+            Bedwars.bc("");
+
+            gameManager.endGame();
+        }
+
+        if (currentSecond == 60 * 60) {
+            gameManager.setState(GameState.WON);
+        }
 /*
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             System.out.println(Bukkit.getOnlinePlayers().size());

@@ -1,9 +1,9 @@
 package me.zjls.bedwars.utils;
 
 import me.zjls.bedwars.games.GameManager;
-import me.zjls.bedwars.worlds.IslandColor;
 import me.zjls.bedwars.worlds.GameWorld;
 import me.zjls.bedwars.worlds.Island;
+import me.zjls.bedwars.worlds.IslandColor;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -41,7 +41,10 @@ public class SetupManager {
         p.getInventory().addItem(
                 new ItemBuilder(Material.DIAMOND, 1).setName("&b设置钻石生成点").toItemStack(),
                 new ItemBuilder(Material.EMERALD, 1).setName("&a设置绿宝石生成点").toItemStack(),
-                new ItemBuilder(Material.BLAZE_POWDER,1).setName("&r设置等待大厅出生点").toItemStack(),
+                new ItemBuilder(Material.BLAZE_POWDER, 1).setName("&r设置等待大厅出生点").toItemStack(),
+                new ItemBuilder(Material.STICK, 1).setName("&r等待大厅定点棒1").toItemStack(),
+                new ItemBuilder(Material.BLAZE_ROD, 1).setName("&r等待大厅定点棒2").toItemStack(),
+                new ItemBuilder(Material.GREEN_STAINED_GLASS_PANE, 1).setName("&a&l保存大厅设置").toItemStack(),
                 new ItemBuilder(Material.STICK, 1).setName("&r更改队伍").toItemStack()
         );
 
@@ -54,16 +57,18 @@ public class SetupManager {
         p.getInventory().addItem(
                 new ItemBuilder(Material.STICK, 1).setName("&r定点棒1").toItemStack(),
                 new ItemBuilder(Material.BLAZE_ROD, 1).setName("&r定点棒2").toItemStack(),
-                new ItemBuilder(Material.VILLAGER_SPAWN_EGG, 1).setName("设置物品商店位置").toItemStack(),
-                new ItemBuilder(Material.ZOMBIE_VILLAGER_SPAWN_EGG, 1).setName("设置升级商店位置").toItemStack(),
-                new ItemBuilder(Material.IRON_INGOT, 1).setName("设置资源生成点").toItemStack(),
-                new ItemBuilder(Material.RED_BED, 1).setName("设置床").toItemStack(),
-                new ItemBuilder(Material.BOWL, 1).setName("设置队伍出生点").toItemStack(),
+                new ItemBuilder(Material.VILLAGER_SPAWN_EGG, 1).setName("&r设置物品商店位置").toItemStack(),
+                new ItemBuilder(Material.ZOMBIE_VILLAGER_SPAWN_EGG, 1).setName("&r设置升级商店位置").toItemStack(),
+                new ItemBuilder(Material.IRON_INGOT, 1).setName("&r设置资源生成点").toItemStack(),
+                new ItemBuilder(Material.RED_BED, 1).setName("&r设置床").toItemStack(),
+                new ItemBuilder(Material.BOWL, 1).setName("&r设置队伍出生点").toItemStack(),
+                new ItemBuilder(Material.BONE, 1).setName("&r设置基地位置1").toItemStack(),
+                new ItemBuilder(Material.FEATHER, 1).setName("&r设置基地位置2").toItemStack(),
                 new ItemBuilder(color.getTeamWool(), 1).setName("&r更改队伍").toItemStack(),
                 new ItemBuilder(Material.GREEN_STAINED_GLASS_PANE, 1).setName("&a&l保存").toItemStack()
         );
 
-        Island island = new Island(getWorld(p), color);
+        Island island = new Island(gameManager, getWorld(p), color);
         playerIslandMap.put(p, island);
 
     }

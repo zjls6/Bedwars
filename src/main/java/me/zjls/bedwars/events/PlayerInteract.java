@@ -4,17 +4,20 @@ import me.zjls.bedwars.games.GameManager;
 import me.zjls.bedwars.games.GameState;
 import me.zjls.bedwars.gui.SetupIslandGUI;
 import me.zjls.bedwars.gui.TeamPickerGUI;
+import me.zjls.bedwars.utils.Bedwars;
 import me.zjls.bedwars.worlds.GameWorld;
 import me.zjls.bedwars.worlds.Island;
 import me.zjls.bedwars.worlds.generators.Generator;
 import me.zjls.bedwars.worlds.generators.GeneratorType;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -28,15 +31,42 @@ public class PlayerInteract implements Listener {
 
     @EventHandler
     public void onInteract(PlayerInteractEvent e) {
+        Player p = e.getPlayer();
+        if (gameManager.getState().equals(GameState.ACTIVE)) {
+            if (!e.hasItem()) return;
+            ItemStack item = e.getItem();
+            if (item == null) return;
+            if (e.getAction().equals(Action.LEFT_CLICK_AIR) || e.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
+                return;
+            }
+
+            if (item.getType().equals(Material.FIRE_CHARGE)) {
+                e.setCancelled(true);
+                Location eyeLocation = p.getEyeLocation();
+                Location add = eyeLocation.add(eyeLocation.getDirection().multiply(1.2));
+                Fireball fireball = (Fireball) add.getWorld().spawnEntity(add, EntityType.FIREBALL);
+                fireball.setVelocity(add.getDirection().normalize().multiply(0.5));
+                fireball.setShooter(p);
+                Bedwars.takeItem(p, e.getItem());
+//                if (e.getItem().getAmount() == 1) {
+//                    if (p.getInventory().getItemInOffHand().getType().equals(Material.FIRE_CHARGE)) {
+//                        p.getInventory().setItemInOffHand(null);
+//                    }
+//                    p.getInventory().setItemInMainHand(null);
+//                } else {
+//                    item.setAmount(item.getAmount() - 1);
+//                }
+            }
+            return;
+        }
         if (!e.hasItem()) return;
         ItemStack item = e.getItem();
         if (item == null) return;
+
         if (!item.hasItemMeta()) return;
         if (e.getAction().equals(Action.LEFT_CLICK_AIR) || e.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
             return;
         }
-
-        Player p = e.getPlayer();
 
         String itemName = item.getItemMeta().getDisplayName();
         itemName = ChatColor.stripColor(itemName);
@@ -52,6 +82,7 @@ public class PlayerInteract implements Listener {
         e.setCancelled(true);
 
         if (gameManager.getSetupManager().isSetuping(p)) {
+            GameWorld world;
             switch (itemName) {
                 case "设置钻石生成点":
                     Generator diamondGenerator = new Generator(gameManager, currentLocation, GeneratorType.DIAMOND, false);
@@ -90,6 +121,18 @@ public class PlayerInteract implements Listener {
                         p.sendMessage("右上位置" + clickedLocation);
                     }
                     break;
+                case "设置基地位置1":
+                    if (clickedLocation != null) {
+                        island.setBaseCorner1(clickedLocation);
+                        p.sendMessage("左下位置" + clickedLocation);
+                    }
+                    break;
+                case "设置基地位置2":
+                    if (clickedLocation != null) {
+                        island.setBaseCorner2(clickedLocation);
+                        p.sendMessage("右上位置" + clickedLocation);
+                    }
+                    break;
                 case "设置物品商店位置":
                     island.setShopLocation(currentLocation);
                     p.sendMessage("设置物品商店位置成功" + currentLocation);
@@ -124,10 +167,24 @@ public class PlayerInteract implements Listener {
                     p.sendMessage("设置队伍出生点成功！" + currentLocation);
                     break;
                 case "设置等待大厅出生点":
-                    GameWorld world = gameManager.getSetupManager().getWorld(p);
+                    world = gameManager.getSetupManager().getWorld(p);
                     world.setWaitingLobbyLocation(currentLocation);
-                    gameManager.getConfigManager().saveWorld(world);
                     p.sendMessage("设置等待大厅出生点成功！" + currentLocation);
+                    break;
+                case "等待大厅定点棒1":
+                    world = gameManager.getSetupManager().getWorld(p);
+                    world.setLobbyPos1(currentLocation);
+                    p.sendMessage("设置等待大厅位置1成功！" + currentLocation);
+                    break;
+                case "等待大厅定点棒2":
+                    world = gameManager.getSetupManager().getWorld(p);
+                    world.setLobbyPos2(currentLocation);
+                    p.sendMessage("设置等待大厅位置2成功！" + currentLocation);
+                    break;
+                case "保存大厅设置":
+                    world = gameManager.getSetupManager().getWorld(p);
+                    gameManager.getConfigManager().saveWorld(world);
+                    p.sendMessage("§a保存成功！");
                     break;
                 case "保存":
                     gameManager.getConfigManager().saveIsland(island);
@@ -142,5 +199,7 @@ public class PlayerInteract implements Listener {
                 gameManager.getGuiManager().setGUI(p, gui);
             }
         }
+
+
     }
 }

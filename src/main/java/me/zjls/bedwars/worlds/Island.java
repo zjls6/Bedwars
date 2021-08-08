@@ -1,12 +1,19 @@
 package me.zjls.bedwars.worlds;
 
+import com.gmail.filoghost.holographicdisplays.api.Hologram;
+import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
+import lombok.Getter;
+import lombok.Setter;
+import me.zjls.bedwars.games.GameManager;
+import me.zjls.bedwars.gui.types.TrapType;
 import me.zjls.bedwars.utils.Color;
 import me.zjls.bedwars.worlds.generators.Generator;
 import me.zjls.bedwars.worlds.generators.GeneratorType;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
+import net.citizensnpcs.trait.SkinTrait;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -19,18 +26,26 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@Getter
+@Setter
 public class Island {
 
+    private GameManager gameManager;
     private GameWorld gameWorld;
     private IslandColor color;
 
     private List<UUID> players = new ArrayList<>();
     private List<UUID> absolutelyAlive = new ArrayList<>();
 
+    private List<TrapType> trapList = new ArrayList<>();
+
     //左下前方
     private Location protectCorner1 = null;
     //右后上方
     private Location protectCorner2 = null;
+
+    private Location baseCorner1 = null;
+    private Location baseCorner2 = null;
 
     private Location upgradeLocation = null;
     private Location shopLocation = null;
@@ -39,7 +54,14 @@ public class Island {
 
     private List<Generator> generatorList = new ArrayList<>();
 
-    public Island(GameWorld gameWorld, IslandColor color) {
+    private NPC itemShop = null;
+    private NPC upgradeShop = null;
+
+    private Hologram itemShopHologram = null;
+    private Hologram upgradeHologram = null;
+
+    public Island(GameManager gameManager, GameWorld gameWorld, IslandColor color) {
+        this.gameManager = gameManager;
         this.gameWorld = gameWorld;
         this.color = color;
     }
@@ -119,7 +141,6 @@ public class Island {
         }
     }
 
-
     public IslandColor getColor() {
         return color;
     }
@@ -129,7 +150,13 @@ public class Island {
             return players.size();
         }
 
-        List<UUID> alive = players.stream().filter(uuid -> Bukkit.getPlayer(uuid).getGameMode().equals(GameMode.SURVIVAL)).collect(Collectors.toList());
+        List<UUID> alive = players.stream().filter(uuid -> {
+            Player p = Bukkit.getPlayer(uuid);
+            if (p == null) {
+                return false;
+            }
+            return p.getGameMode().equals(GameMode.SURVIVAL);
+        }).collect(Collectors.toList());
         int count = alive.size();
 
         for (UUID alivePlayer : absolutelyAlive) {
@@ -176,10 +203,40 @@ public class Island {
         return region.contains(BlockVector3.at(blockLocation.getX(), blockLocation.getY(), blockLocation.getZ()));
     }
 
+    public boolean isInBase(Player p) {
+        Location location = p.getLocation();
+
+        BlockVector3 one = BlockVector3.at(baseCorner1.getX(), baseCorner1.getY(), baseCorner1.getZ());
+        BlockVector3 two = BlockVector3.at(baseCorner2.getX(), baseCorner2.getY(), baseCorner2.getZ());
+
+        CuboidRegion region = new CuboidRegion(one, two);
+
+        return region.contains(BlockVector3.at(location.getX(), location.getY(), location.getZ()));
+    }
+
     public void spawnShops() {
-        NPC itemShop = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, Color.str("&e右键点击"));
+        itemShop = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, Color.str("&e右键点击"));
         itemShop.spawn(shopLocation);
-        NPC upgradeShop = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, Color.str("&e右键点击"));
+        itemShop.getOrAddTrait(SkinTrait.class).setSkinName("zjls6", true);
+//        me.zjls.bedwars.utils.NPC.createNPC(shopLocation, "&e右键点击");
+
+        itemShopHologram = HologramsAPI.createHologram(gameManager.getPlugin(), shopLocation.clone().add(0, 2.6, 0));
+        itemShopHologram.appendTextLine(Color.str("&b物品商店"));
+
+        upgradeShop = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, Color.str("&e右键点击"));
         upgradeShop.spawn(upgradeLocation);
+
+        upgradeHologram = HologramsAPI.createHologram(gameManager.getPlugin(), upgradeLocation.clone().add(0, 2.6, 0));
+        upgradeHologram.appendTextLine(Color.str("&b升级商店"));
+
+    }
+
+
+    public NPC getItemShop() {
+        return itemShop;
+    }
+
+    public NPC getUpgradeShop() {
+        return upgradeShop;
     }
 }

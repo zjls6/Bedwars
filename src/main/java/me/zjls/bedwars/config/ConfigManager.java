@@ -68,7 +68,26 @@ public class ConfigManager {
                 gameWorld.setGenerators(loadGenerators(gameWorld, mapGenerators, false));
             }
 
-            gameWorld.setWaitingLobbyLocation(locationFrom(gameWorld.getWorld(), mapSection.getConfigurationSection("waitingLobby")));
+            ConfigurationSection lobbySection;
+
+            if (mapSection.isConfigurationSection("waitingLobby")) {
+                lobbySection = mapSection.getConfigurationSection("waitingLobby");
+            } else {
+                lobbySection = mapSection.createSection("waitingLobby");
+            }
+            if (!lobbySection.isConfigurationSection("spawnLocation")) {
+                lobbySection.createSection("spawnLocation");
+            }
+            if (!lobbySection.isConfigurationSection("LobbyPos1")) {
+                lobbySection.createSection("LobbyPos1");
+            }
+            if (!lobbySection.isConfigurationSection("LobbyPos2")) {
+                lobbySection.createSection("LobbyPos2");
+            }
+
+            gameWorld.setWaitingLobbyLocation(locationFrom(gameWorld.getWorld(), lobbySection.getConfigurationSection("spawnLocation")));
+            gameWorld.setLobbyPos1(locationFrom(gameWorld.getWorld(), lobbySection.getConfigurationSection("LobbyPos1")));
+            gameWorld.setLobbyPos2(locationFrom(gameWorld.getWorld(), lobbySection.getConfigurationSection("LobbyPos2")));
 
             consumer.accept(gameWorld);
         });
@@ -76,16 +95,17 @@ public class ConfigManager {
 
     public Island loadIsland(GameWorld world, ConfigurationSection section) {
         IslandColor color = IslandColor.valueOf(section.getName());
-        Island island = new Island(world, color);
+        Island island = new Island(gameManager, world, color);
         try {
             island.setBedLocation(locationFrom(world.getWorld(), section.getConfigurationSection("Bed")));
             island.setShopLocation(locationFrom(world.getWorld(), section.getConfigurationSection("Shop")));
             island.setUpgradeLocation(locationFrom(world.getWorld(), section.getConfigurationSection("Upgrade")));
             island.setProtectCorner1(locationFrom(world.getWorld(), section.getConfigurationSection("ProtectCorner1")));
             island.setProtectCorner2(locationFrom(world.getWorld(), section.getConfigurationSection("ProtectCorner2")));
+            island.setBaseCorner1(locationFrom(world.getWorld(), section.getConfigurationSection("BaseCorner1")));
+            island.setBaseCorner2(locationFrom(world.getWorld(), section.getConfigurationSection("BaseCorner2")));
             island.setSpawnLocation(locationFrom(world.getWorld(), section.getConfigurationSection("Spawn")));
             island.setGenerators(loadGenerators(world, section.getConfigurationSection("generators"), true));
-
         } catch (Exception e) {
             Bukkit.getServer().getLogger().severe(Color.str(world.getName() + " 中的 " + color.getName() + " &c队(岛) 未配置好"));
             e.printStackTrace();
@@ -121,7 +141,9 @@ public class ConfigManager {
             lobbySection = mapSection.createSection("waitingLobby");
         }
 
-        writeLocation(world.getWaitingLobbyLocation(), lobbySection);
+        writeLocation(world.getWaitingLobbyLocation(), lobbySection.createSection("spawnLocation"));
+        writeLocation(world.getLobbyPos1(), lobbySection.createSection("LobbyPos1"));
+        writeLocation(world.getLobbyPos2(), lobbySection.createSection("LobbyPos2"));
 
         gameManager.getPlugin().saveConfig();
     }
@@ -168,6 +190,8 @@ public class ConfigManager {
         locationToWrite.put("Upgrade", island.getUpgradeLocation());
         locationToWrite.put("ProtectCorner1", island.getProtectCorner1());
         locationToWrite.put("ProtectCorner2", island.getProtectCorner2());
+        locationToWrite.put("BaseCorner1", island.getBaseCorner1());
+        locationToWrite.put("BaseCorner2", island.getBaseCorner2());
 
         for (Map.Entry<String, Location> entry : locationToWrite.entrySet()) {
             ConfigurationSection section;

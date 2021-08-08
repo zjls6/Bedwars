@@ -1,5 +1,7 @@
 package me.zjls.bedwars.worlds;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.zjls.bedwars.games.GameManager;
 import me.zjls.bedwars.utils.Bedwars;
 import me.zjls.bedwars.utils.Color;
@@ -18,6 +20,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Getter
+@Setter
 public class GameWorld {
 
     private String name;
@@ -25,6 +29,8 @@ public class GameWorld {
     private int maxTeamSize = 1;
 
     private Location WaitingLobbyLocation;
+    private Location LobbyPos1;
+    private Location LobbyPos2;
 
     private GeneratorTier diamondTier = GeneratorTier.ONE;
     private GeneratorTier emeraldTier = GeneratorTier.ONE;
@@ -57,8 +63,7 @@ public class GameWorld {
         world = creator.createWorld();
         world.setAutoSave(false);
         world.setClearWeatherDuration(1000);
-//        world.setGameRule(GameRule.NATURAL_REGENERATION,false);
-        world.setGameRule(GameRule.SHOW_DEATH_MESSAGES, false);
+//        world.setGameRule(GameRule.SHOW_DEATH_MESSAGES, false);
         world.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
         world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
         world.setGameRule(GameRule.DO_MOB_SPAWNING, false);
@@ -160,6 +165,10 @@ public class GameWorld {
         return islands.stream().filter(island -> island.isMember(p)).findFirst().orElse(null);
     }
 
+    public Island getIsland(IslandColor color) {
+        return islands.stream().filter(island -> island.getColor().equals(color)).findFirst().orElse(null);
+    }
+
     public List<Generator> getGenerators() {
         return generators;
     }
@@ -176,8 +185,7 @@ public class GameWorld {
         return islands.stream().filter(island -> {
             if (island.isBedPlaced() && island.alivePlayerCount() != 0) {
                 return true;
-            }
-            return !island.isBedPlaced() && island.alivePlayerCount() != 0;
+            } else return !island.isBedPlaced() && island.alivePlayerCount() != 0;
         }).collect(Collectors.toList());
     }
 
@@ -208,7 +216,7 @@ public class GameWorld {
             Bedwars.bc(Color.str("&a绿宝石生成点 &e已经升至 &c" + emeraldTier.getName() + " &e级"));
         }
         if (currentSecond == 30 * 60) {
-            //todo:床自毁
+            //todo:龙 ，床自毁
         }
         for (Island island : getIslands()) {
             for (Generator generator : island.getGenerators()) {

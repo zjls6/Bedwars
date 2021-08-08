@@ -82,17 +82,19 @@
             <id>everything</id>
             <url>http://repo.citizensnpcs.co/</url>
         </repository>
-
+        <repository>
+            <id>simonsators Repo</id>
+            <url>http://simonsator.de/repo</url>
+        </repository>
         <!--        <repository>-->
         <!--            <id>bungeecord-repo</id>-->
         <!--            <url>https://oss.sonatype.org/content/repositories/snapshots</url>-->
         <!--        </repository>-->
     </repositories>
-
     <dependencies>
         <dependency>
             <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
+            <artifactId>spigot</artifactId>
             <version>1.16.5-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
@@ -119,7 +121,18 @@
             <version>2.0.28-SNAPSHOT</version>
             <type>jar</type>
             <scope>provided</scope>
-        </dependency >
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.20</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.simonsator</groupId>
+            <artifactId>BungeecordPartyAndFriends</artifactId>
+            <version>1.0.83</version>
+        </dependency>
 
         <!--        <dependency>-->
         <!--            <groupId>net.md-5</groupId>-->

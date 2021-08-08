@@ -35,7 +35,7 @@ public class PlayerChat implements Listener {
         if (island != null) {
             prefix.append(Color.of(island.getColor().getColor())).append(Color.str("&l" + Color.of(island.getColor().getColor()) + island.getColor().getName() + " "));
         } else {
-            prefix.append(Color.str("&3"));
+            prefix.append(Color.str("&f"));
         }
 
         e.setFormat(Color.str(prefix + p.getDisplayName() + "&7> " + e.getMessage()));

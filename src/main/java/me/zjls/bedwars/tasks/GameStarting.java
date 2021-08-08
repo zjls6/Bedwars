@@ -77,7 +77,6 @@ public class GameStarting extends BukkitRunnable {
     @Override
     public void cancel() {
         super.cancel();
-
         this.bossBar.removeAll();
     }
 }
