@@ -80,24 +80,18 @@ public class InventoryClick implements Listener {
         GUI gui = gameManager.getGuiManager().getOpenGUI(p);
 
         if (gui == null) {
-            //p.sendMessage("4");
             return;
         }
 
         e.setCancelled(true);
-        // p.sendMessage("5");
+
         GUI newGUI = gui.handleClick(p, item, e.getView());
-        //  p.sendMessage("6");
 
-//        if (!ChatColor.stripColor(gui.getName()).equals("物品商店")){
+
         e.getView().close();
-//        }
-
-//        p.sendMessage("7");
 
         gameManager.getGuiManager().setGUI(p, newGUI);
 
-//        p.sendMessage("8");
     }
 
     @EventHandler
@@ -168,9 +162,8 @@ public class InventoryClick implements Listener {
 
         String title = ChatColor.stripColor(e.getView().getTitle());
         if (title.contains("物品商店")) {
-            if (e.getAction().equals(InventoryAction.DROP_ONE_SLOT)) {
+            if (e.getAction().equals(InventoryAction.DROP_ONE_SLOT) || e.getAction().equals(InventoryAction.DROP_ONE_CURSOR)) {
                 e.setCancelled(true);
-                p.sendMessage("1");
                 return;
             }
 //            if ((e.getClickedInventory().getType().equals(InventoryType.CHEST) && e.getCursor() != null) || e.isShiftClick()) { }
@@ -694,7 +687,7 @@ public class InventoryClick implements Listener {
                     case 13:
                         break;
                     case 16:
-                        upgradeShopGUI.openTrapGUI();
+                        upgradeShopGUI.openTrapGUI(island);
                         break;
                     default:
                         break;
@@ -702,28 +695,98 @@ public class InventoryClick implements Listener {
             }
 
             if (title.equals("选择陷阱")) {
+                List<TrapType> trapList = island.getTrapList();
+                int needDiamond = 0;
+                switch (trapList.size()) {
+                    case 0:
+                        needDiamond = 1;
+                        break;
+                    case 1:
+                        needDiamond = 2;
+                        break;
+                    case 2:
+                        needDiamond = 4;
+                        break;
+                    default:
+                        break;
+                }
                 switch (slot) {
                     case 26:
                         upgradeShopGUI.openMainGUI();
                         break;
                     case 10:
-                        if (p.getInventory().containsAtLeast(new ItemStack(Material.DIAMOND), 1)) {
-                            List<TrapType> trapList = island.getTrapList();
+
+                        if (p.getInventory().containsAtLeast(new ItemStack(Material.DIAMOND), needDiamond)) {
                             if (trapList.size() < 3) {
                                 p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_HARP, 1, 1);
-                                p.getInventory().removeItem(new ItemStack(Material.DIAMOND, 1));
+                                p.getInventory().removeItem(new ItemStack(Material.DIAMOND, needDiamond));
                                 trapList.add(TrapType.TRAP);
+                                upgradeShopGUI.openTrapGUI(island);
                                 p.sendMessage(Color.str("&a你购买了 &6这是个陷阱！"));
                             } else {
                                 p.sendMessage(Color.str("&c陷阱队列已满！"));
+                                p.closeInventory();
                             }
                         } else {
                             p.sendMessage(Color.str("&c你没有足够的 &b钻石"));
                             p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
                             p.closeInventory();
-                            return;
                         }
-
+                        break;
+                    case 11:
+                        if (p.getInventory().containsAtLeast(new ItemStack(Material.DIAMOND), needDiamond)) {
+                            if (trapList.size() < 3) {
+                                p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_HARP, 1, 1);
+                                p.getInventory().removeItem(new ItemStack(Material.DIAMOND, needDiamond));
+                                trapList.add(TrapType.ATTACK);
+                                upgradeShopGUI.openTrapGUI(island);
+                                p.sendMessage(Color.str("&a你购买了 &6反击陷阱"));
+                            } else {
+                                p.sendMessage(Color.str("&c陷阱队列已满！"));
+                                p.closeInventory();
+                            }
+                        } else {
+                            p.sendMessage(Color.str("&c你没有足够的 &b钻石"));
+                            p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
+                            p.closeInventory();
+                        }
+                        break;
+                    case 12:
+                        if (p.getInventory().containsAtLeast(new ItemStack(Material.DIAMOND), needDiamond)) {
+                            if (trapList.size() < 3) {
+                                p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_HARP, 1, 1);
+                                p.getInventory().removeItem(new ItemStack(Material.DIAMOND, needDiamond));
+                                trapList.add(TrapType.WARN);
+                                upgradeShopGUI.openTrapGUI(island);
+                                p.sendMessage(Color.str("&a你购买了 &6报警陷阱"));
+                            } else {
+                                p.sendMessage(Color.str("&c陷阱队列已满！"));
+                                p.closeInventory();
+                            }
+                        } else {
+                            p.sendMessage(Color.str("&c你没有足够的 &b钻石"));
+                            p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
+                            p.closeInventory();
+                        }
+                        break;
+                    case 13:
+                        if (p.getInventory().containsAtLeast(new ItemStack(Material.DIAMOND), needDiamond)) {
+                            if (trapList.size() < 3) {
+                                p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_HARP, 1, 1);
+                                p.getInventory().removeItem(new ItemStack(Material.DIAMOND, needDiamond));
+                                trapList.add(TrapType.MINING);
+                                upgradeShopGUI.openTrapGUI(island);
+                                p.sendMessage(Color.str("&a你购买了 &6挖掘疲劳陷阱"));
+                            } else {
+                                p.sendMessage(Color.str("&c陷阱队列已满！"));
+                                p.closeInventory();
+                            }
+                        } else {
+                            p.sendMessage(Color.str("&c你没有足够的 &b钻石"));
+                            p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
+                            p.closeInventory();
+                        }
+                        break;
                     default:
                         break;
                 }

@@ -2,6 +2,7 @@ package me.zjls.bedwars.gui;
 
 import me.zjls.bedwars.games.GameManager;
 import me.zjls.bedwars.gui.types.ProtectionTier;
+import me.zjls.bedwars.gui.types.TrapType;
 import me.zjls.bedwars.utils.Color;
 import me.zjls.bedwars.utils.ItemBuilder;
 import me.zjls.bedwars.worlds.Island;
@@ -12,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class UpgradeShopGUI {
 
@@ -45,7 +47,7 @@ public class UpgradeShopGUI {
 
     public void setUpgradeInventory(Island island) {
 
-        if (gameManager.getSharpnessTeam().size() == 0) {
+        if (gameManager.getSharpnessTeam().isEmpty()) {
             upgradeInventory.setItem(10, new ItemBuilder(Material.IRON_SWORD).hideAttributes().setName("&c锋利附魔")
                     .setLore(Arrays.asList("&7我方队员的剑和斧", "&7将获得永久的 &6锋利I &7附魔", "", "&7花费：&b4 钻石")).toItemStack());
         } else {
@@ -101,28 +103,67 @@ public class UpgradeShopGUI {
         upgradeInventory.setItem(16, new ItemBuilder(Material.LEATHER).setName("&a购买一个陷阱")
                 .setLore(Arrays.asList("&7已购买的陷阱", "&7将加入下面的队列中", "", "&e点击查看！")).toItemStack());
 
-        upgradeInventory.setItem(30, new ItemBuilder(Material.LIGHT_GRAY_STAINED_GLASS, 1).setName("&c陷阱 &6#1&7：&c无")
-                .setLore(Arrays.asList("&7敌人进入我方基地时", "&7会触发该陷阱", "", "&7购买的陷阱会在此排列", "&7陷阱费用取决于排列的数量")).toItemStack());
-        upgradeInventory.setItem(31, new ItemBuilder(Material.LIGHT_GRAY_STAINED_GLASS, 2).setName("&c陷阱 &6#2&7：&c无")
-                .setLore(Arrays.asList("&7敌人进入我方基地时", "&7会触发该陷阱", "", "&7购买的陷阱会在此排列", "&7陷阱费用取决于排列的数量")).toItemStack());
-        upgradeInventory.setItem(32, new ItemBuilder(Material.LIGHT_GRAY_STAINED_GLASS, 3).setName("&c陷阱 &6#3&7：&c无")
-                .setLore(Arrays.asList("&7敌人进入我方基地时", "&7会触发该陷阱", "", "&7购买的陷阱会在此排列", "&7陷阱费用取决于排列的数量")).toItemStack());
+        List<TrapType> trapList = island.getTrapList();
+        switch (trapList.size()) {
+            case 0:
+                upgradeInventory.setItem(30, new ItemBuilder(Material.LIGHT_GRAY_STAINED_GLASS, 1).setName("&c陷阱 &6#1&7：&c无")
+                        .setLore(Arrays.asList("&7敌人进入我方基地时", "&7会触发该陷阱", "", "&7购买的陷阱会在此排列", "&7陷阱费用取决于排列的数量")).toItemStack());
+                upgradeInventory.setItem(31, new ItemBuilder(Material.LIGHT_GRAY_STAINED_GLASS, 2).setName("&c陷阱 &6#2&7：&c无")
+                        .setLore(Arrays.asList("&7敌人进入我方基地时", "&7会触发该陷阱", "", "&7购买的陷阱会在此排列", "&7陷阱费用取决于排列的数量")).toItemStack());
+                upgradeInventory.setItem(32, new ItemBuilder(Material.LIGHT_GRAY_STAINED_GLASS, 3).setName("&c陷阱 &6#3&7：&c无")
+                        .setLore(Arrays.asList("&7敌人进入我方基地时", "&7会触发该陷阱", "", "&7购买的陷阱会在此排列", "&7陷阱费用取决于排列的数量")).toItemStack());
+                break;
+            case 1:
+                upgradeInventory.setItem(30, trapList.get(0).getItem(1));
+                upgradeInventory.setItem(31, new ItemBuilder(Material.LIGHT_GRAY_STAINED_GLASS, 2).setName("&c陷阱 &6#2&7：&c无")
+                        .setLore(Arrays.asList("&7敌人进入我方基地时", "&7会触发该陷阱", "", "&7购买的陷阱会在此排列", "&7陷阱费用取决于排列的数量")).toItemStack());
+                upgradeInventory.setItem(32, new ItemBuilder(Material.LIGHT_GRAY_STAINED_GLASS, 3).setName("&c陷阱 &6#3&7：&c无")
+                        .setLore(Arrays.asList("&7敌人进入我方基地时", "&7会触发该陷阱", "", "&7购买的陷阱会在此排列", "&7陷阱费用取决于排列的数量")).toItemStack());
+                break;
+            case 2:
+                upgradeInventory.setItem(30, trapList.get(0).getItem(1));
+                upgradeInventory.setItem(31, trapList.get(1).getItem(2));
+                upgradeInventory.setItem(32, new ItemBuilder(Material.LIGHT_GRAY_STAINED_GLASS, 3).setName("&c陷阱 &6#3&7：&c无")
+                        .setLore(Arrays.asList("&7敌人进入我方基地时", "&7会触发该陷阱", "", "&7购买的陷阱会在此排列", "&7陷阱费用取决于排列的数量")).toItemStack());
+                break;
+            case 3:
+                upgradeInventory.setItem(30, trapList.get(0).getItem(1));
+                upgradeInventory.setItem(31, trapList.get(1).getItem(2));
+                upgradeInventory.setItem(32, trapList.get(2).getItem(3));
+                break;
+        }
+
 
     }
 
-    public void openTrapGUI() {
+    public void openTrapGUI(Island island) {
+        String needDiamondString;
+        switch (island.getTrapList().size()) {
+            case 0:
+                needDiamondString = "&7花费：&b1 钻石";
+                break;
+            case 1:
+                needDiamondString = "&7花费：&b2 钻石";
+                break;
+            case 2:
+                needDiamondString = "&7花费：&b4 钻石";
+                break;
+            default:
+                needDiamondString = "&a陷阱队列已满！";
+                break;
+        }
 
         trapInventory = Bukkit.createInventory(null, 27, Color.str("&r选择陷阱"));
 
         trapInventory.setItem(10, new ItemBuilder(Material.TRIPWIRE_HOOK).setName("&c这是个陷阱！")
-                .setLore(Arrays.asList("&7对来基地的敌人造成", "&7失明与缓慢效果", "&7持续 &68 &7秒", "", "&7花费：&b1 钻石")).toItemStack());
+                .setLore(Arrays.asList("&7对来基地的敌人造成", "&7失明与缓慢效果", "&7持续 &68 &7秒", "", needDiamondString)).toItemStack());
 
         trapInventory.setItem(11, new ItemBuilder(Material.FEATHER).setName("&c反击陷阱")
-                .setLore(Arrays.asList("&7给予基地附近的队友", "&7速度 &6I &7与跳跃提升 &6II", "&7效果持续 &610 &7秒", "", "&7花费：&b1 钻石")).toItemStack());
+                .setLore(Arrays.asList("&7给予基地附近的队友", "&7速度 &6I &7与跳跃提升 &6II", "&7效果持续 &610 &7秒", "", needDiamondString)).toItemStack());
         trapInventory.setItem(12, new ItemBuilder(Material.REDSTONE_TORCH).setName("&c报警陷阱")
-                .setLore(Arrays.asList("&7显示隐身的玩家", "&7及其名称和队伍", "", "&7花费：&b1 钻石")).toItemStack());
+                .setLore(Arrays.asList("&7显示隐身的玩家", "&7及其名称和队伍", "", needDiamondString)).toItemStack());
         trapInventory.setItem(13, new ItemBuilder(Material.IRON_PICKAXE).setName("&c挖掘疲劳陷阱")
-                .setLore(Arrays.asList("&7对来基地的敌人造成", "&7挖掘疲劳效果", "&7持续 &610 &7秒", "", "&7花费：&b1 钻石")).toItemStack());
+                .setLore(Arrays.asList("&7对来基地的敌人造成", "&7挖掘疲劳效果", "&7持续 &610 &7秒", "", needDiamondString)).toItemStack());
 
         trapInventory.setItem(26, new ItemBuilder(Material.ARROW).setName("&a返回").setLore("&7至升级与陷阱").toItemStack());
 

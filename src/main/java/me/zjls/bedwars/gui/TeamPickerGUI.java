@@ -34,19 +34,19 @@ public class TeamPickerGUI implements GUI {
             ItemStack teamWool = new ItemStack(island.getColor().getTeamWool());
             ItemMeta teamWoolMeta = teamWool.getItemMeta();
             List<String> lore = new ArrayList<>();
-            teamWoolMeta.setDisplayName(island.getColor().getName() + " 队");
+            teamWoolMeta.setDisplayName(island.getColor().getChatColor() + island.getColor().getName() + "队");
 
             if (island.isMember(p)) {
                 teamWoolMeta.addEnchant(Enchantment.THORNS, 1, false);
                 teamWoolMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);//隐藏附魔
-                lore.add("§a已选择");
+                lore.add(Color.str("&a已选择"));
                 teamWoolMeta.setLore(lore);
             }
 
             List<UUID> players = island.getPlayers();
 
             if (!players.isEmpty()) {
-                lore.add("§r队伍玩家列表： (" + players.size() + "/" + gameManager.getGameWorld().getMaxTeamSize() + ")");
+                lore.add(Color.str("&f队伍玩家列表： &7(&6" + players.size() + "&7/&a" + gameManager.getGameWorld().getMaxTeamSize() + "&7)"));
                 for (UUID uuid : players) {
                     Player player = Bukkit.getPlayer(uuid);
                     if (player != null) {
@@ -117,7 +117,7 @@ public class TeamPickerGUI implements GUI {
                 gameManager.getScoreboard().updateScoreboard();
                 gameManager.getPlayerManager().giveTeamArmor(p, island);
             } else {
-                p.sendMessage(Color.of(island.getColor().getColor()) + island.getColor().getName() + "队 §r已经满人了！");
+                p.sendMessage(Color.str(island.getColor().getChatColor() + island.getColor().getName() + "队 &r已经满人了！"));
             }
         }
 

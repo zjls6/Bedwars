@@ -90,8 +90,6 @@ public class Bedwars {
                     deathMessages.add(Color.str(player.getName() + " 被 " + killer.getName() + " 打入了虚空，真是太绝望了"));
                     deathMessages.add(Color.str(player.getName() + " 被 " + killer.getName() + " 打入了虚空，真是太绝望了！！！！！"));
                     int randomIndex = ThreadLocalRandom.current().nextInt(deathMessages.size()) % deathMessages.size();
-
-
                     return deathMessages.get(randomIndex);
                 }
                 if (damageCause == EntityDamageEvent.DamageCause.PROJECTILE) {

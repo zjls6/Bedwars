@@ -31,13 +31,16 @@ public class NPCClick implements Listener {
     @EventHandler
     public void onClick(NPCRightClickEvent e) {
         Player p = e.getClicker();
+        if (!gameManager.getPlayerInGame().contains(p.getUniqueId())) {
+            return;
+        }
 
         for (Island island : gameManager.getGameWorld().getIslands()) {
             if (e.getNPC().equals(island.getItemShop())) {
                 Map<UUID, Good> playersGoodMap = gameManager.getPlayerManager().getEditingQuickBuyPlayersGoodMap();
                 if (playersGoodMap.containsKey(p.getUniqueId())) {
                     playersGoodMap.remove(p.getUniqueId());
-                    p.sendMessage("11");
+
                 }
                 itemShopGUI = new ItemShopGUI(gameManager, p);
                 p.sendMessage(Color.str("&6你打开了物品商店"));

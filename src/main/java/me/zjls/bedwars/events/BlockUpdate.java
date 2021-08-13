@@ -62,14 +62,14 @@ public class BlockUpdate implements Listener {
                     if (player == null) {
                         continue;
                     }
-                    player.playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, 1, 1);
+                    player.playSound(player.getLocation(), Sound.ENTITY_WITHER_DEATH, 1, 1);
                     player.sendTitle(Color.str("&c&l床被破坏"), Color.str("&c你将无法重生"), 20, 40, 20);
                 }
 
                 location.getWorld().strikeLightningEffect(location);
                 gameManager.getColorHologramMap().get(island.getColor()).delete();
 
-                p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, 1, 1);
+                p.playSound(p.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, 1, 1);
 
                 Bedwars.bc(Color.str(island.getColor().getChatColor() + island.getColor().getName() + "队 &r的床已被摧毁！"));
 

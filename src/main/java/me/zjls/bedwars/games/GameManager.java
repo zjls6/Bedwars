@@ -265,6 +265,7 @@ public class GameManager {
 
                 for (Player p : Bukkit.getOnlinePlayers()) {
                     Bukkit.getScheduler().runTaskLater(plugin, bukkitTask -> p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1), 3);
+                    p.getEnderChest().clear();
                     Island island = gameWorld.getIsland(p);
                     if (island == null) {
                         //todo:随机分配
@@ -328,10 +329,10 @@ public class GameManager {
                 Optional<Island> optionalIsland = getGameWorld().getActiveIslands().stream().findFirst();
                 if (!optionalIsland.isPresent()) {
                     Bedwars.bc(Color.str("&a平局，游戏结束！"));
-                } else {
-                    Island island = optionalIsland.get();
-                    Bedwars.bc(Color.str("&6游戏结束，" + island.getColor().getChatColor() + island.getColor().getName() + "队 &a获胜！"));
+                    return;
                 }
+                Island island = optionalIsland.get();
+                Bedwars.bc(Color.str("&6游戏结束，" + island.getColor().getChatColor() + island.getColor().getName() + "队 &a获胜！"));
 
                 this.scoreboard.updateScoreboard();
                 Bukkit.getServer().getScheduler().runTaskLater(plugin, bukkitTask -> setState(GameState.RESET), 20 * 15);

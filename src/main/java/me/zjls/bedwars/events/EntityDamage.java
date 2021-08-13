@@ -5,6 +5,7 @@ import me.zjls.bedwars.games.GameState;
 import me.zjls.bedwars.utils.Bedwars;
 import me.zjls.bedwars.worlds.Island;
 import org.bukkit.GameMode;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Silverfish;
 import org.bukkit.event.EventHandler;
@@ -91,15 +92,12 @@ public class EntityDamage implements Listener {
                 e.setCancelled(true);
             }
         }
-//        if (e.getEntity() instanceof Player || e.getDamager() instanceof Player) {
-//            Player p = (Player) e.getEntity();
-//            Player damager = (Player) e.getDamager();
+
+
 //            BossBar bossBar = Bukkit.createBossBar("玩家" + p.getName() + "的血量为：" + p.getHealth(), BarColor.RED, BarStyle.SOLID);
 //            bossBar.removeAll();
 //            bossBar.setProgress(p.getHealth() / p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
 //            bossBar.addPlayer(damager);
-//        }
-
 
     }
 
@@ -137,10 +135,15 @@ public class EntityDamage implements Listener {
         Bedwars.bc(deathsMessage);
 
         p.spigot().respawn();
-
+        Player killer = p.getKiller();
+        if (killer != null) {
+            killer.playSound(killer.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
+            killer.playSound(killer.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
+        }
         e.setDeathMessage(null);
         e.setDroppedExp(0);
         e.getDrops().clear();
+
         Map<UUID, Integer> playerDeathCount = gameManager.getPlayerManager().getPlayerDeathCount();
         playerDeathCount.put(p.getUniqueId(), playerDeathCount.getOrDefault(p.getUniqueId(), 0) + 1);
 

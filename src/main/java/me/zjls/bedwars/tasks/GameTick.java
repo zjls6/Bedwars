@@ -9,9 +9,12 @@ import me.zjls.bedwars.worlds.Island;
 import net.md_5.bungee.api.ChatMessageType;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.UUID;
 
 @Getter
 public class GameTick extends BukkitRunnable {
@@ -44,6 +47,14 @@ public class GameTick extends BukkitRunnable {
                     gameManager.getColorHologramMap().get(island.getColor()).delete();
                 }
             }
+            for (UUID uuid : gameManager.getPlayerInGame()) {
+                Player player = Bukkit.getPlayer(uuid);
+                if (player == null) {
+                    return;
+                }
+                player.playSound(player.getLocation(), Sound.ENTITY_WITHER_DEATH, 1, 1);
+            }
+
             Bedwars.bc("");
             Bedwars.bc(Color.str("&c床自毁 &7> &f所有的床都被破坏了！"));
             Bedwars.bc("");

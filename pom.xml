@@ -133,7 +133,11 @@
             <artifactId>BungeecordPartyAndFriends</artifactId>
             <version>1.0.83</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.github.chris2018998</groupId>
+            <artifactId>beecp</artifactId>
+            <version>3.2.6</version>
+        </dependency>
         <!--        <dependency>-->
         <!--            <groupId>net.md-5</groupId>-->
         <!--            <artifactId>bungeecord-api</artifactId>-->
