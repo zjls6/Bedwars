@@ -1,7 +1,7 @@
 这是一个1.16.5高版本起床战争插件
 基本实现了hypixel起床战争的功能
 
-使用JScoreboards实现动态计分板
-使用hologram api创建全息显示文字
-使用citizens api创建商店npc
-使用beecp连接MySQL数据库
+1. 使用JScoreboards实现动态计分板
+2. 使用hologram api创建全息显示文字
+3. 使用citizens api创建商店npc
+4. 使用beecp连接MySQL数据库
